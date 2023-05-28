@@ -19,7 +19,7 @@ void main() {
         ),
       ),
       bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, //centralizando os botões
         children: [
           IconButton(
             onPressed: () {
@@ -37,7 +37,7 @@ void main() {
             onPressed: () {
               // Ação do botão de ícone
             },
-            iconSize: 38, // Define o tamanho do ícone
+            iconSize: 38r, // Define o tamanho do ícone
             icon: Icon(
               Icons.search,
             ),
