@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 void main() {
 
-    MaterialApp app = MaterialApp(
+  MaterialApp app = MaterialApp(
+
+      title: 'Primeiro App',
 
       theme: ThemeData(primarySwatch: Colors.deepPurple),
 
@@ -10,14 +12,16 @@ void main() {
 
         appBar: AppBar(title: Text("Meu app")),
 
-        body: Text("Apenas começando..."),
+        body: Center(
+
+          child: Text("Apenas começando...")
+
+        ),
 
         bottomNavigationBar: Text("Botão 1"),
 
       ));
 
-
   runApp(app);
-
 
 }
