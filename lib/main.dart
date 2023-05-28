@@ -37,8 +37,12 @@ void main() {
             onPressed: () {
               // Ação do botão de ícone
             },
-            icon: Icon(Icons.search),
+            iconSize: 38, // Define o tamanho do ícone
+            icon: Icon(
+              Icons.search,
+            ),
           ),
+          
           IconButton(
             onPressed: () {
               // Ação do botão de ícone
