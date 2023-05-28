@@ -12,7 +12,6 @@ void main() {
               "Apenas começando...",
               style: TextStyle(fontSize: 10, height: 1.5),
               // Defina a altura desejada para o espaçamento entre as linhas
-         
             ),
             Text("No meio..."),
             Text("Terminando..."),
@@ -22,23 +21,35 @@ void main() {
       bottomNavigationBar: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ElevatedButton(
+          IconButton(
             onPressed: () {
-              // Ação do botão 1
+              // Ação do botão de ícone
             },
-            child: Text("Botão 1"),
+            icon: Icon(Icons.home),
           ),
-          ElevatedButton(
+          IconButton(
             onPressed: () {
-              // Ação do botão 2
+              // Ação do botão de ícone
             },
-            child: Text("Botão 2"),
+            icon: Icon(Icons.save),
           ),
-          ElevatedButton(
+          IconButton(
             onPressed: () {
-              // Ação do botão 3
+              // Ação do botão de ícone
             },
-            child: Text("Botão 3"),
+            icon: Icon(Icons.search),
+          ),
+          IconButton(
+            onPressed: () {
+              // Ação do botão de ícone
+            },
+            icon: Icon(Icons.notifications),
+          ),
+          IconButton(
+            onPressed: () {
+              // Ação do botão de ícone
+            },
+            icon: Icon(Icons.settings),
           ),
         ],
       ),
