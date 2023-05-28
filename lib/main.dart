@@ -27,28 +27,31 @@ void main() {
             },
             icon: Icon(Icons.home),
           ),
+           Spacer(),
           IconButton(
             onPressed: () {
               // Ação do botão de ícone
             },
             icon: Icon(Icons.save),
           ),
+           Spacer(),
           IconButton(
             onPressed: () {
               // Ação do botão de ícone
             },
-            iconSize: 38r, // Define o tamanho do ícone
+            iconSize: 38, // Define o tamanho do ícone
             icon: Icon(
               Icons.search,
             ),
           ),
-          
+           Spacer(),
           IconButton(
             onPressed: () {
               // Ação do botão de ícone
             },
             icon: Icon(Icons.notifications),
           ),
+           Spacer(),
           IconButton(
             onPressed: () {
               // Ação do botão de ícone
