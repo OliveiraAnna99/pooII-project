@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 void main() {
   MaterialApp app = MaterialApp(
-    theme: ThemeData(primarySwatch: Colors.red),
+    theme: ThemeData(
+      primarySwatch: Colors.red, 
+      fontFamily: 'Poppins'
+    
+    
+    ),
     home: Scaffold(
       appBar: AppBar(title: Text("Meu app")),
       body: Center(
@@ -10,7 +15,11 @@ void main() {
           children: [
             Text(
               "Apenas começando...",
-              style: TextStyle(fontSize: 10, height: 1.5),
+              style: TextStyle(
+                fontSize: 10, 
+                height: 1.5
+              ),
+          
               // Defina a altura desejada para o espaçamento entre as linhas
             ),
             Text("No meio..."),
