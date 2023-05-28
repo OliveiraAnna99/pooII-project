@@ -16,7 +16,11 @@ void main() {
 
             children: [
 
-              Text("Apenas começando..."),
+              Text(
+                "Apenas começando...",
+                 style: TextStyle(height: 5, fontSize: 10),
+              
+              ),
 
               Text("No meio..."),
 
