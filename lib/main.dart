@@ -3,8 +3,16 @@ import 'package:flutter/material.dart';
 
 void main() {
 
-  MaterialApp app = MaterialApp();
+  MaterialApp app = MaterialApp(
 
-  runApp(app);  
+      theme: ThemeData(
+
+        primarySwatch: Colors.purple,
+
+      ),
+
+      home: Text("Apenas começando..."));
+
+  runApp(app);
 
 }
