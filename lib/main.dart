@@ -4,8 +4,6 @@ void main() {
 
   MaterialApp app = MaterialApp(
 
-      title: 'Primeiro App',
-
       theme: ThemeData(primarySwatch: Colors.deepPurple),
 
       home: Scaffold(
@@ -14,7 +12,19 @@ void main() {
 
         body: Center(
 
-          child: Text("Apenas começando...")
+          child: Column(
+
+            children: [
+
+              Text("Apenas começando..."),
+
+              Text("No meio..."),
+
+              Text("Terminando...")              
+
+            ]
+
+          )          
 
         ),
 
