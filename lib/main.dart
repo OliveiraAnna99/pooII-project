@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 void main() {
-
+  
   MaterialApp app = MaterialApp(
 
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      theme: ThemeData(primarySwatch: Colors.red),
 
       home: Scaffold(
 
