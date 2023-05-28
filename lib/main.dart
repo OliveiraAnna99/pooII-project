@@ -22,9 +22,24 @@ void main() {
       bottomNavigationBar: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text("Texto 1"),
-          Text("Texto 2"),
-          Text("Texto 3"),
+          ElevatedButton(
+            onPressed: () {
+              // Ação do botão 1
+            },
+            child: Text("Botão 1"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Ação do botão 2
+            },
+            child: Text("Botão 2"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Ação do botão 3
+            },
+            child: Text("Botão 3"),
+          ),
         ],
       ),
     ),
