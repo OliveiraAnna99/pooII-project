@@ -6,7 +6,6 @@ void main() {
   runApp(MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -14,6 +13,14 @@ class MyApp extends StatelessWidget {
       home: MyPageView(),
     );
   }
+}
+
+class Comic {
+  final int id;
+  final String title;
+  final String description;
+
+  Comic({required this.id, required this.title, required this.description});
 }
 
 class MyPageView extends StatefulWidget {
@@ -24,11 +31,51 @@ class MyPageView extends StatefulWidget {
 class _MyPageViewState extends State<MyPageView> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
+  List<Comic> comics = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchComics();
+  }
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  Future<void> fetchComics() async {
+    final ts = '1';
+    final publicKey = '72332a467099deb37887145eca3d01a2';
+    final privateKey = 'YOUR_PRIVATE_KEY';
+    final hash = '79bb9c041d3a9fb28617b827b80ec5a5';
+
+    final url =
+        'http://gateway.marvel.com/v1/public/comics?ts=1&apikey=72332a467099deb37887145eca3d01a2&hash=79bb9c041d3a9fb28617b827b80ec5a5';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final List<dynamic> comicList = data['data']['results'];
+
+        setState(() {
+          comics = comicList.map((item) {
+            return Comic(
+              id: item['id'],
+              title: item['title'],
+              description: item['description'] ?? '',
+            );
+          }).toList();
+        });
+      } else {
+        print('Error making request: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
   }
 
   @override
@@ -44,65 +91,74 @@ class _MyPageViewState extends State<MyPageView> {
             _currentPage = page;
           });
         },
-        children: [
-          Container(
-            color: Colors.blue,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(10.0),
-                    color: Colors.amber[600],
-                    width: 200.0,
-                    height: 108.0,
+              children: [
+                Container(
+                  color: Colors.blue,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(10.0),
+                          color: Colors.amber[600],
+                          width: 200.0,
+                          height: 108.0,
+                        ),
+                        Text(
+                          'Página 1',
+                          style: TextStyle(fontSize: 24, color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
-                  Text(
-                    'Página 1',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                ),
+                Container(
+                  color: Colors.green,
+                  child: Center(
+                    child: Text(
+                      'Página 2',
+                      style: TextStyle(fontSize: 24, color: Colors.white),
+                    ),
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  color: Colors.orange,
+                  child: Center(
+                    child: Text(
+                      'Página 3',
+                      style: TextStyle(fontSize: 24, color: Colors.white),
+                    ),
+                  ),
+                ),
+                Container(
+                  color: Colors.orange,
+                  child: DataTable(
+                    columns: const <DataColumn>[
+                      DataColumn(label: Text('ID')),
+                      DataColumn(label: Text('Title')),
+                      DataColumn(label: Text('Description')),
+                    ],
+                    rows: comics.map((Comic comic) => DataRow(
+                      cells: <DataCell>[
+                        DataCell(Text(comic.id.toString())),
+                        DataCell(Text(comic.title)),
+                        DataCell(Text(comic.description)),
+                      ],
+                    )).toList(),
+                  ),
+                ),
+
+                Container(
+                  color: Colors.orange,
+                  child: Center(
+                    child: Text(
+                      'Página 5',
+                      style: TextStyle(fontSize: 24, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-          Container(
-            color: Colors.green,
-            child: Center(
-              child: Text(
-                'Página 2',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              ),
-            ),
-          ),
-          Container(
-            color: Colors.orange,
-            child: Center(
-              child: Text(
-                'Página 3',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              ),
-            ),
-          ),
-          Container(
-            color: Colors.orange,
-            child: Center(
-              child: Text(
-                'Página 4',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              ),
-            ),
-          ),
-          Container(
-            color: Colors.orange,
-            child: Center(
-              child: Text(
-                'Página 5',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              ),
-            ),
-          ),
-        ],
-      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentPage,
         onTap: (int page) {
