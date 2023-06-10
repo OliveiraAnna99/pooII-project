@@ -1,76 +1,138 @@
+
 import 'package:flutter/material.dart';
 
 void main() {
-  MaterialApp app = MaterialApp(
-    theme: ThemeData(
-      primarySwatch: Colors.red, 
-      fontFamily: 'Poppins'
-    
-    
-    ),
-    home: Scaffold(
-      appBar: AppBar(title: Text("Meu app")),
-      body: Center(
-        child: Column(
-          children: [
-            Text(
-              "Apenas começando...",
-              style: TextStyle(
-                fontSize: 10, 
-                height: 1.5
-              ),
-          
-              // Defina a altura desejada para o espaçamento entre as linhas
-            ),
-            Text("No meio..."),
-            Text("Terminando..."),
-          ],
-        ),
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: MyPageView(),
+    );
+  }
+}
+
+class MyPageView extends StatefulWidget {
+  @override
+  _MyPageViewState createState() => _MyPageViewState();
+}
+
+class _MyPageViewState extends State<MyPageView> {
+  final PageController _pageController = PageController(initialPage: 0);
+  int _currentPage = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Paginação Flutter'),
       ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly, //centralizando os botões
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (int page) {
+          setState(() {
+            _currentPage = page;
+          });
+        },
         children: [
-          IconButton(
-            onPressed: () {
-              // Ação do botão de ícone
-            },
-            icon: Icon(Icons.home),
-          ),
-           Spacer(),
-          IconButton(
-            onPressed: () {
-              // Ação do botão de ícone
-            },
-            icon: Icon(Icons.save),
-          ),
-           Spacer(),
-          IconButton(
-            onPressed: () {
-              // Ação do botão de ícone
-            },
-            iconSize: 38, // Define o tamanho do ícone
-            icon: Icon(
-              Icons.search,
+          Container(
+            color: Colors.blue,
+            child: Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(10.0),
+                        color: Colors.amber[600],
+                        width: 48.0,
+                        height: 48.0,
+                      ),
+                      Text(
+                        'Página 1',
+                        style: TextStyle(fontSize: 24, color: Colors.white),
+                      ),
+                    ],
+                ),
             ),
           ),
-           Spacer(),
-          IconButton(
-            onPressed: () {
-              // Ação do botão de ícone
-            },
-            icon: Icon(Icons.notifications),
+          Container(
+            color: Colors.green,
+            child: Center(
+              child: Text(
+                'Página 2',
+                style: TextStyle(fontSize: 24, color: Colors.white),
+              ),
+            ),
           ),
-           Spacer(),
-          IconButton(
-            onPressed: () {
-              // Ação do botão de ícone
-            },
-            icon: Icon(Icons.settings),
+          Container(
+            color: Colors.orange,
+            child: Center(
+              child: Text(
+                'Página 3',
+                style: TextStyle(fontSize: 24, color: Colors.white),
+              ),
+            ),
+          ),
+           Container(
+            color: Colors.orange,
+            child: Center(
+              child: Text(
+                'Página 4',
+                style: TextStyle(fontSize: 24, color: Colors.white),
+              ),
+            ),
+          ),
+           Container(
+            color: Colors.orange,
+            child: Center(
+              child: Text(
+                'Página 5',
+                style: TextStyle(fontSize: 24, color: Colors.white),
+              ),
+            ),
           ),
         ],
       ),
-    ),
-  );
-
-  runApp(app);
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentPage,
+        onTap: (int page) {
+          _pageController.animateToPage(
+            page,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.ease,
+          );
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, color: Colors.black),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.save, color: Colors.black),
+            label: 'Salvar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search, color: Colors.black),
+            label: 'Pesquisar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications, color: Colors.black),
+            label: 'Notificações',
+          ),
+          BottomNavigationBarItem(
+             icon: Icon(Icons.settings, color: Colors.black),
+            label: 'Configurações',
+          ),
+        ],
+      ),
+    );
+  }
 }
