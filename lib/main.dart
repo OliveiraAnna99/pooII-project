@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -46,21 +45,21 @@ class _MyPageViewState extends State<MyPageView> {
           Container(
             color: Colors.blue,
             child: Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(10.0),
-                        color: Colors.amber[600],
-                        width: 48.0,
-                        height: 48.0,
-                      ),
-                      Text(
-                        'Página 1',
-                        style: TextStyle(fontSize: 24, color: Colors.white),
-                      ),
-                    ],
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(10.0),
+                    color: Colors.amber[600],
+                    width: 200.0,
+                    height: 108.0,
+                  ),
+                  Text(
+                    'Página 1',
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  ),
+                ],
+              ),
             ),
           ),
           Container(
@@ -81,7 +80,7 @@ class _MyPageViewState extends State<MyPageView> {
               ),
             ),
           ),
-           Container(
+          Container(
             color: Colors.orange,
             child: Center(
               child: Text(
@@ -90,7 +89,7 @@ class _MyPageViewState extends State<MyPageView> {
               ),
             ),
           ),
-           Container(
+          Container(
             color: Colors.orange,
             child: Center(
               child: Text(
@@ -112,24 +111,69 @@ class _MyPageViewState extends State<MyPageView> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.black),
-            label: 'Inicio',
+            icon: Container(
+              width: 68.0,
+              height: 68.0,
+              decoration: BoxDecoration(
+                color: _currentPage == 0 ? Color(0xFFDB0000) : Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.home, color: Colors.black),
+            ),
+            label: 'Início',
+            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.save, color: Colors.black),
+            icon: Container(
+              width: 68.0,
+              height: 68.0,
+              decoration: BoxDecoration(
+                color: _currentPage == 1 ? Color(0xFFDB0000) : Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.save, color: Colors.black),
+            ),
             label: 'Salvar',
+            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Colors.black),
+            icon: Container(
+              width: 68.0,
+              height: 68.0,
+              decoration: BoxDecoration(
+                color: _currentPage == 2 ? Color(0xFFDB0000) : Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.search, color: Colors.black),
+            ),
             label: 'Pesquisar',
+            backgroundColor: Colors.white // Define a cor de fundo do botão selecionado
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications, color: Colors.black),
+            icon: Container(
+              width: 68.0,
+              height: 68.0,
+              decoration: BoxDecoration(
+                color: _currentPage == 3 ? Color(0xFFDB0000) : Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.notifications, color: Colors.black),
+            ),
             label: 'Notificações',
+            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
           ),
           BottomNavigationBarItem(
-             icon: Icon(Icons.settings, color: Colors.black),
+            icon: Container(
+              width: 68.0,
+              height: 68.0,
+              decoration: BoxDecoration(
+                color: _currentPage == 4 ? Color(0xFFDB0000) : Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.settings, color: Colors.black),
+            ),
             label: 'Configurações',
+            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
           ),
         ],
       ),
