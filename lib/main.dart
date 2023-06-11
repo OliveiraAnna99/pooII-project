@@ -84,12 +84,19 @@ class _MyPageViewState extends State<MyPageView> {
     }
   }
 
-  void addToFavorites(Comic comic) {
-    setState(() {
+void toggleFavorite(Comic comic) {
+  setState(() {
+    if (favoriteComics.contains(comic)) {
+      favoriteComics.remove(comic);
+      comic.isFavorite = !comic.isFavorite;
+
+    } else {
       favoriteComics.add(comic);
       comic.isFavorite = !comic.isFavorite;
-    });
-  }
+
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -188,9 +195,12 @@ class _MyPageViewState extends State<MyPageView> {
                                     icon: Icon(Icons.favorite),
                                     color: comic.isFavorite ? Colors.red : null,
 
-                                    onPressed: () {
-                                      addToFavorites(comic); // Adicionar quadrinho aos favoritos
+                                   onPressed: () {
+                                      setState(() {
+                                        toggleFavorite(comic);
+                                      });
                                     },
+
                                   ),
                                 ),
                               ),
@@ -205,7 +215,7 @@ class _MyPageViewState extends State<MyPageView> {
             ),
           ),
           Container(
-            color: Colors.orange,
+            color: const Color.fromARGB(255, 255, 255, 255),
             child: Center(
               child: ListView.builder(
                 itemCount: favoriteComics.length,
