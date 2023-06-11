@@ -33,6 +33,7 @@ class _MyPageViewState extends State<MyPageView> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
   List<Comic> comics = [];
+  List<Comic> favoriteComics = []; // Lista para armazenar os quadrinhos favoritos
 
   @override
   void initState() {
@@ -82,6 +83,12 @@ class _MyPageViewState extends State<MyPageView> {
     }
   }
 
+  void addToFavorites(Comic comic) {
+    setState(() {
+      favoriteComics.add(comic);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,44 +104,6 @@ class _MyPageViewState extends State<MyPageView> {
         },
         children: [
           Container(
-            color: Colors.blue,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(10.0),
-                    color: Colors.amber[600],
-                    width: 200.0,
-                    height: 108.0,
-                  ),
-                  Text(
-                    'Página 1',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            color: Colors.green,
-            child: Center(
-              child: Text(
-                'Página 2',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              ),
-            ),
-          ),
-          Container(
-            color: Colors.orange,
-            child: Center(
-              child: Text(
-                'Página 3',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              ),
-            ),
-          ),
-         Container(
             color: const Color.fromARGB(255, 255, 255, 255),
             child: Center(
               child: ListView.builder(
@@ -153,22 +122,13 @@ class _MyPageViewState extends State<MyPageView> {
                         dataRowHeight: 220,
                         columns: [
                           DataColumn(
-                            label: Container(
-                              width: constraints.maxWidth * 0.3,
-                              child: Text(
-                                '',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                            label: Text('Image'),
                           ),
                           DataColumn(
-                            label: Container(
-                              width: constraints.maxWidth * 0.7,
-                              child: Text(
-                                '',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                            label: Text('Title'),
+                          ),
+                          DataColumn(
+                            label: Text('Description'),
                           ),
                         ],
                         rows: [
@@ -204,16 +164,29 @@ class _MyPageViewState extends State<MyPageView> {
                                         ),
                                         Expanded(
                                           child: Container(
-                                            constraints: BoxConstraints(maxWidth: 100), // Defina a largura máxima desejada
+                                            constraints: BoxConstraints(
+                                              minWidth: 200,
+                                              maxWidth: 200,
+                                            ),
                                             child: Text(
                                               comic.description,
-                                              overflow: TextOverflow.ellipsis, // Define o comportamento de overflow
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ],
+                                ),
+                              ),
+                              DataCell(
+                                Center(
+                                  child: IconButton(
+                                    icon: Icon(Icons.favorite),
+                                    onPressed: () {
+                                      addToFavorites(comic); // Adicionar quadrinho aos favoritos
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
@@ -229,9 +202,16 @@ class _MyPageViewState extends State<MyPageView> {
           Container(
             color: Colors.orange,
             child: Center(
-              child: Text(
-                'Página 5',
-                style: TextStyle(fontSize: 24, color: Colors.white),
+              child: ListView.builder(
+                itemCount: favoriteComics.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final comic = favoriteComics[index];
+                  return ListTile(
+                    title: Text(comic.title),
+                    subtitle: Text(comic.description),
+                    leading: Image.network(comic.image),
+                  );
+                },
               ),
             ),
           ),
@@ -258,7 +238,7 @@ class _MyPageViewState extends State<MyPageView> {
               child: Icon(Icons.home, color: Colors.black),
             ),
             label: 'Início',
-            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
+            backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -271,7 +251,7 @@ class _MyPageViewState extends State<MyPageView> {
               child: Icon(Icons.save, color: Colors.black),
             ),
             label: 'Salvar',
-            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
+            backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -284,7 +264,7 @@ class _MyPageViewState extends State<MyPageView> {
               child: Icon(Icons.search, color: Colors.black),
             ),
             label: 'Pesquisar',
-            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
+            backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -297,7 +277,7 @@ class _MyPageViewState extends State<MyPageView> {
               child: Icon(Icons.notifications, color: Colors.black),
             ),
             label: 'Notificações',
-            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
+            backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -310,7 +290,7 @@ class _MyPageViewState extends State<MyPageView> {
               child: Icon(Icons.settings, color: Colors.black),
             ),
             label: 'Configurações',
-            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
+            backgroundColor: Colors.white,
           ),
         ],
       ),
