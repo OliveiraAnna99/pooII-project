@@ -33,6 +33,7 @@ class _MyPageViewState extends State<MyPageView> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
   List<Comic> comics = [];
+  List<Comic> favoriteComics = []; // Lista para armazenar os quadrinhos favoritos
 
   @override
   void initState() {
@@ -46,42 +47,47 @@ class _MyPageViewState extends State<MyPageView> {
     super.dispose();
   }
 
- Future<void> fetchComics() async {
-  final ts = '1';
-  final publicKey = '72332a467099deb37887145eca3d01a2';
-  final privateKey = 'YOUR_PRIVATE_KEY';
-  final hash = '79bb9c041d3a9fb28617b827b80ec5a5';
+  Future<void> fetchComics() async {
+    final ts = '1';
+    final publicKey = '72332a467099deb37887145eca3d01a2';
+    final privateKey = 'YOUR_PRIVATE_KEY';
+    final hash = '79bb9c041d3a9fb28617b827b80ec5a5';
 
-  final url =
-      'http://gateway.marvel.com/v1/public/comics?ts=1&apikey=72332a467099deb37887145eca3d01a2&hash=79bb9c041d3a9fb28617b827b80ec5a5';
+    final url =
+        'http://gateway.marvel.com/v1/public/comics?ts=1&apikey=72332a467099deb37887145eca3d01a2&hash=79bb9c041d3a9fb28617b827b80ec5a5';
 
-  try {
-    final response = await http.get(Uri.parse(url));
+    try {
+      final response = await http.get(Uri.parse(url));
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final List<dynamic> comicList = data['data']['results'];
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final List<dynamic> comicList = data['data']['results'];
 
-      setState(() {
-        comics = comicList.map((item) {
-          return Comic(
-            id: item['id'],
-            title: item['title'],
-            description: item['description'] ?? 'No description available',
-            image: item['thumbnail']['path'] +
-                '.' +
-                item['thumbnail']['extension'],
-          );
-        }).toList();
-      });
-    } else {
-      print('Error making request: ${response.statusCode}');
+        setState(() {
+          comics = comicList.map((item) {
+            return Comic(
+              id: item['id'],
+              title: item['title'],
+              description: item['description'] ?? 'No description available',
+              image: item['thumbnail']['path'] +
+                  '.' +
+                  item['thumbnail']['extension'],
+            );
+          }).toList();
+        });
+      } else {
+        print('Error making request: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
     }
-  } catch (error) {
-    print('Error: $error');
   }
-}
 
+  void addToFavorites(Comic comic) {
+    setState(() {
+      favoriteComics.add(comic);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,76 +104,114 @@ class _MyPageViewState extends State<MyPageView> {
         },
         children: [
           Container(
-            color: Colors.blue,
+            color: const Color.fromARGB(255, 255, 255, 255),
             child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(10.0),
-                    color: Colors.amber[600],
-                    width: 200.0,
-                    height: 108.0,
-                  ),
-                  Text(
-                    'Página 1',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            color: Colors.green,
-            child: Center(
-              child: Text(
-                'Página 2',
-                style: TextStyle(fontSize: 24, color: Colors.white),
+              child: ListView.builder(
+                itemCount: comics.length,
+                itemBuilder: (BuildContext context, int index) {
+                  if (index >= comics.length - 1) {
+                    // Reached the end of the list, fetch more data
+                    fetchComics();
+                    return CircularProgressIndicator(); // Show a loading indicator
+                  }
+                  final comic = comics[index];
+                  return LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints constraints) {
+                      return DataTable(
+                        columnSpacing: constraints.maxWidth * 0.02,
+                        dataRowHeight: 220,
+                        columns: [
+                          DataColumn(
+                            label: Text('Image'),
+                          ),
+                          DataColumn(
+                            label: Text('Title'),
+                          ),
+                          DataColumn(
+                            label: Text('Description'),
+                          ),
+                        ],
+                        rows: [
+                          DataRow(
+                            cells: [
+                              DataCell(
+                                SizedBox(
+                                  width: constraints.maxWidth * 0.3,
+                                  height: 100,
+                                  child: Image.network(comic.image),
+                                ),
+                              ),
+                              DataCell(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Titulo: ",
+                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(comic.title),
+                                      ],
+                                    ),
+                                    SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Descrição: ",
+                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            constraints: BoxConstraints(
+                                              minWidth: 200,
+                                              maxWidth: 200,
+                                            ),
+                                            child: Text(
+                                              comic.description,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              DataCell(
+                                Center(
+                                  child: IconButton(
+                                    icon: Icon(Icons.favorite),
+                                    onPressed: () {
+                                      addToFavorites(comic); // Adicionar quadrinho aos favoritos
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ),
           Container(
             color: Colors.orange,
             child: Center(
-              child: Text(
-                'Página 3',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              ),
-            ),
-          ),
-          Container(
-            color: Colors.orange,
-            child: DataTable(
-              columns: const <DataColumn>[
-                DataColumn(label: Text('Image')),
-
-                DataColumn(label: Text('ID')),
-                DataColumn(label: Text('Title')),
-                DataColumn(label: Text('Description')),
-              ],
-              rows: comics.map((Comic comic) => DataRow(
-                cells: <DataCell>[
-                   DataCell(
-                    SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: Image.network(comic.image),
-                    ),
-                  ),
-                  DataCell(Text(comic.id.toString())),
-                  DataCell(Text(comic.title)),
-                  DataCell(Text(comic.description)),
-                 
-                ],
-              )).toList(),
-            ),
-          ),
-          Container(
-            color: Colors.orange,
-            child: Center(
-              child: Text(
-                'Página 5',
-                style: TextStyle(fontSize: 24, color: Colors.white),
+              child: ListView.builder(
+                itemCount: favoriteComics.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final comic = favoriteComics[index];
+                  return ListTile(
+                    title: Text(comic.title),
+                    subtitle: Text(comic.description),
+                    leading: Image.network(comic.image),
+                  );
+                },
               ),
             ),
           ),
@@ -194,7 +238,7 @@ class _MyPageViewState extends State<MyPageView> {
               child: Icon(Icons.home, color: Colors.black),
             ),
             label: 'Início',
-            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
+            backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -207,7 +251,7 @@ class _MyPageViewState extends State<MyPageView> {
               child: Icon(Icons.save, color: Colors.black),
             ),
             label: 'Salvar',
-            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
+            backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -220,7 +264,7 @@ class _MyPageViewState extends State<MyPageView> {
               child: Icon(Icons.search, color: Colors.black),
             ),
             label: 'Pesquisar',
-            backgroundColor: Colors.white // Define a cor de fundo do botão selecionado
+            backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -233,7 +277,7 @@ class _MyPageViewState extends State<MyPageView> {
               child: Icon(Icons.notifications, color: Colors.black),
             ),
             label: 'Notificações',
-            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
+            backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -246,7 +290,7 @@ class _MyPageViewState extends State<MyPageView> {
               child: Icon(Icons.settings, color: Colors.black),
             ),
             label: 'Configurações',
-            backgroundColor: Colors.white, // Define a cor de fundo do botão selecionado
+            backgroundColor: Colors.white,
           ),
         ],
       ),
