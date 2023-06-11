@@ -20,8 +20,9 @@ class Comic {
   final String title;
   final String description;
   final String image;
+  bool isFavorite; 
 
-  Comic({required this.id, required this.title, required this.description, required this.image});
+  Comic({required this.id, required this.title, required this.description, required this.image, this.isFavorite = false});
 }
 
 class MyPageView extends StatefulWidget {
@@ -86,6 +87,7 @@ class _MyPageViewState extends State<MyPageView> {
   void addToFavorites(Comic comic) {
     setState(() {
       favoriteComics.add(comic);
+      comic.isFavorite = !comic.isFavorite;
     });
   }
 
@@ -179,10 +181,13 @@ class _MyPageViewState extends State<MyPageView> {
                                   ],
                                 ),
                               ),
+                             
                               DataCell(
                                 Center(
                                   child: IconButton(
                                     icon: Icon(Icons.favorite),
+                                    color: comic.isFavorite ? Colors.red : null,
+
                                     onPressed: () {
                                       addToFavorites(comic); // Adicionar quadrinho aos favoritos
                                     },
