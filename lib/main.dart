@@ -230,6 +230,54 @@ void toggleFavorite(Comic comic) {
               ),
             ),
           ),
+          Container(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            child: Center(
+              child: ListView.builder(
+                itemCount: favoriteComics.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final comic = favoriteComics[index];
+                  return ListTile(
+                    title: Text(comic.title),
+                    subtitle: Text(comic.description),
+                    leading: Image.network(comic.image),
+                  );
+                },
+              ),
+            ),
+          ),
+          Container(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            child: Center(
+              child: ListView.builder(
+                itemCount: favoriteComics.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final comic = favoriteComics[index];
+                  return ListTile(
+                    title: Text(comic.title),
+                    subtitle: Text(comic.description),
+                    leading: Image.network(comic.image),
+                  );
+                },
+              ),
+            ),
+          ),
+          Container(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            child: Center(
+              child: ListView.builder(
+                itemCount: favoriteComics.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final comic = favoriteComics[index];
+                  return ListTile(
+                    title: Text(comic.title),
+                    subtitle: Text(comic.description),
+                    leading: Image.network(comic.image),
+                  );
+                },
+              ),
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
