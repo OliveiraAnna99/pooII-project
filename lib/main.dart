@@ -1,19 +1,28 @@
+import 'package:binder/binder.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(
+    home: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyPageView(),
+    return BinderScope(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "MarvelApp",
+        theme: ThemeData(primarySwatch: Colors.red),
+        home: MyPageView(),
+      ),
     );
   }
 }
+
 
 class Comic {
   final int id;
@@ -126,6 +135,136 @@ class _MyPageViewState extends State<MyPageView> {
           });
         },
         children: [
+         Container(
+            color: Color.fromARGB(255, 255, 255, 255),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Search for a content',
+                        style: TextStyle(fontSize: 18.0, color: Color.fromARGB(197, 0, 0, 0)),
+                      ),
+                      SizedBox(height: 16.0),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextField(
+                          onChanged: (value) {
+                            searchComics(value);
+                          },
+                        decoration: InputDecoration(
+                            labelText: 'Search for a content',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(60.0)
+                            ),
+                           
+                        ),
+
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                 Expanded(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 200,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Text(
+                                    'Comics',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 26,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Container(
+                                width: 200,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage('images/homem-de-ferro.png'),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Align(
+                                  alignment: Alignment.bottomLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(
+                                      'Characters',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 26,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+
+
+                          ],
+                        ),
+
+
+                      ],
+                    ),
+                  ),
+                ),
+
+
+                 Expanded(
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: getFilteredComics().length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final comic = getFilteredComics()[index];
+                        return Container(
+                          margin: EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.network(
+                                  comic.image,
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(comic.title),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+              ],
+            ),
+          ),
           Container(
             color: const Color.fromARGB(255, 255, 255, 255),
             child: Center(
