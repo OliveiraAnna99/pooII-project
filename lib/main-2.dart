@@ -21,6 +21,7 @@ class Comic {
   final String description;
   final String image;
   bool isFavorite; 
+
   Comic({required this.id, required this.title, required this.description, required this.image, this.isFavorite = false});
 }
 
@@ -34,6 +35,8 @@ class _MyPageViewState extends State<MyPageView> {
   int _currentPage = 0;
   List<Comic> comics = [];
   List<Comic> favoriteComics = []; // Lista para armazenar os quadrinhos favoritos
+
+  String searchQuery = '';
 
   @override
   void initState() {
@@ -53,8 +56,9 @@ class _MyPageViewState extends State<MyPageView> {
     final privateKey = 'YOUR_PRIVATE_KEY';
     final hash = '79bb9c041d3a9fb28617b827b80ec5a5';
 
-    final url =
-        'http://gateway.marvel.com/v1/public/comics?ts=1&apikey=72332a467099deb37887145eca3d01a2&hash=79bb9c041d3a9fb28617b827b80ec5a5';
+    final url = 'http://gateway.marvel.com/v1/public/comics?ts=1&apikey=72332a467099deb37887145eca3d01a2&hash=79bb9c041d3a9fb28617b827b80ec5a5';
+
+    final urlPersonagens = 'http://gateway.marvel.com/v1/public/characters?ts=1&apikey=72332a467099deb37887145eca3d01a2&hash=79bb9c041d3a9fb28617b827b80ec5a5';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -69,9 +73,7 @@ class _MyPageViewState extends State<MyPageView> {
               id: item['id'],
               title: item['title'],
               description: item['description'] ?? 'No description available',
-              image: item['thumbnail']['path'] +
-                  '.' +
-                  item['thumbnail']['extension'],
+              image: item['thumbnail']['path'] + '.' + item['thumbnail']['extension'],
             );
           }).toList();
         });
@@ -83,12 +85,32 @@ class _MyPageViewState extends State<MyPageView> {
     }
   }
 
-void addToFavorites(Comic comic) {
-  setState(() {
-    comic.isFavorite = !comic.isFavorite;
-  });
-}
+  void toggleFavorite(Comic comic) {
+    setState(() {
+      if (favoriteComics.contains(comic)) {
+        favoriteComics.remove(comic);
+        comic.isFavorite = !comic.isFavorite;
+      } else {
+        favoriteComics.add(comic);
+        comic.isFavorite = !comic.isFavorite;
+      }
+    });
+  }
 
+  void searchComics(String query) {
+    setState(() {
+      searchQuery = query;
+    });
+  }
+
+  List<Comic> getFilteredComics() {
+    if (searchQuery.isEmpty) {
+      return comics;
+    } else {
+      return comics.where((comic) =>
+          comic.title.toLowerCase().contains(searchQuery.toLowerCase())).toList();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,14 +130,14 @@ void addToFavorites(Comic comic) {
             color: const Color.fromARGB(255, 255, 255, 255),
             child: Center(
               child: ListView.builder(
-                itemCount: comics.length,
+                itemCount: getFilteredComics().length,
                 itemBuilder: (BuildContext context, int index) {
-                  if (index >= comics.length - 1) {
+                  if (index >= getFilteredComics().length - 1) {
                     // Reached the end of the list, fetch more data
                     fetchComics();
                     return CircularProgressIndicator(); // Show a loading indicator
                   }
-                  final comic = comics[index];
+                  final comic = getFilteredComics()[index];
                   return LayoutBuilder(
                     builder: (BuildContext context, BoxConstraints constraints) {
                       return DataTable(
@@ -180,20 +202,19 @@ void addToFavorites(Comic comic) {
                                   ],
                                 ),
                               ),
-                             DataCell(
-                              Center(
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.favorite,
+                              DataCell(
+                                Center(
+                                  child: IconButton(
+                                    icon: Icon(Icons.favorite),
                                     color: comic.isFavorite ? Colors.red : null,
+                                    onPressed: () {
+                                      setState(() {
+                                        toggleFavorite(comic);
+                                      });
+                                    },
                                   ),
-                                  onPressed: () {
-                                    addToFavorites(comic);
-                                  },
                                 ),
                               ),
-                            )
-
                             ],
                           ),
                         ],
@@ -205,7 +226,87 @@ void addToFavorites(Comic comic) {
             ),
           ),
           Container(
-            color: Colors.orange,
+            color: const Color.fromARGB(255, 255, 255, 255),
+            child: Center(
+              child: ListView.builder(
+                itemCount: favoriteComics.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final comic = favoriteComics[index];
+                  return ListTile(
+                    title: Text(comic.title),
+                    subtitle: Text(comic.description),
+                    leading: Image.network(comic.image),
+                  );
+                },
+              ),
+            ),
+          ),
+          Container(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    onChanged: (value) {
+                      searchComics(value);
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Search',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: getFilteredComics().length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final comic = getFilteredComics()[index];
+                      return ListTile(
+                        title: Text(comic.title),
+                        subtitle: Text(comic.description),
+                        leading: Image.network(comic.image),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            child: Center(
+              child: ListView.builder(
+                itemCount: favoriteComics.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final comic = favoriteComics[index];
+                  return ListTile(
+                    title: Text(comic.title),
+                    subtitle: Text(comic.description),
+                    leading: Image.network(comic.image),
+                  );
+                },
+              ),
+            ),
+          ),
+          Container(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            child: Center(
+              child: ListView.builder(
+                itemCount: favoriteComics.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final comic = favoriteComics[index];
+                  return ListTile(
+                    title: Text(comic.title),
+                    subtitle: Text(comic.description),
+                    leading: Image.network(comic.image),
+                  );
+                },
+              ),
+            ),
+          ),
+          Container(
+            color: const Color.fromARGB(255, 255, 255, 255),
             child: Center(
               child: ListView.builder(
                 itemCount: favoriteComics.length,
@@ -279,22 +380,9 @@ void addToFavorites(Comic comic) {
                 color: _currentPage == 3 ? Color(0xFFDB0000) : Colors.white,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.notifications, color: Colors.black),
+              child: Icon(Icons.favorite, color: Colors.black),
             ),
-            label: 'Notificações',
-            backgroundColor: Colors.white,
-          ),
-          BottomNavigationBarItem(
-            icon: Container(
-              width: 68.0,
-              height: 68.0,
-              decoration: BoxDecoration(
-                color: _currentPage == 4 ? Color(0xFFDB0000) : Colors.white,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.settings, color: Colors.black),
-            ),
-            label: 'Configurações',
+            label: 'Favoritos',
             backgroundColor: Colors.white,
           ),
         ],
