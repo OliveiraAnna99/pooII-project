@@ -143,7 +143,7 @@ class _MyPageViewState extends State<SearchPage> {
                     itemBuilder: (BuildContext context, int index) {
                       final comic = getFilteredComics()[index];
                       return Container(
-                        margin: EdgeInsets.all(8),
+                        margin: EdgeInsets.all(100),
                         child: Column(
                           children: [
                             Stack(
@@ -177,6 +177,7 @@ class _MyPageViewState extends State<SearchPage> {
                     },
                   ),
                 ),
+                
                 Expanded(
                   child: Scaffold(
                     body: Container(
