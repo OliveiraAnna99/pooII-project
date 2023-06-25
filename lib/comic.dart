@@ -1,3 +1,4 @@
+
 class Comic {
   final int id;
   final String title;
@@ -13,3 +14,4 @@ class Comic {
     this.isFavorite = false,
   });
 }
+
