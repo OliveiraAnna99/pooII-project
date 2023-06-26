@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'comic.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'favorites_page.dart'; // Importe a classe FavoritePage
+import 'favorites_page.dart';
 
 class SearchPage extends StatefulWidget {
   @override
-  _MyPageViewState createState() => _MyPageViewState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class _MyPageViewState extends State<SearchPage> {
+class _SearchPageState extends State<SearchPage> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
   List<Comic> comics = [];
+  List<Personagem> personagens = [];
   List<Comic> favoriteComics = [];
+  List<Personagem> favoritePersonagens = [];
 
   String searchQuery = '';
 
@@ -43,8 +45,9 @@ class _MyPageViewState extends State<SearchPage> {
 
     try {
       final response = await http.get(Uri.parse(url));
-
+      final responsePersonagens = await http.get(Uri.parse(urlPersonagens));
       if (response.statusCode == 200) {
+
         final data = json.decode(response.body);
         final List<dynamic> comicList = data['data']['results'];
 
@@ -55,6 +58,22 @@ class _MyPageViewState extends State<SearchPage> {
               title: item['title'],
               description: item['description'] ?? 'No description available',
               image: item['thumbnail']['path'] + '.' + item['thumbnail']['extension'],
+              isFavorite: false, // Adicionei o valor inicial de isFavorite como false
+            );
+          }).toList();
+        });
+      } else if (responsePersonagens.statusCode == 200) {
+        final data = json.decode(responsePersonagens.body);
+        final List<dynamic> personagemList = data['data']['results'];
+
+        setState(() {
+          personagens = personagemList.map((item) {
+            return Personagem(
+              id: item['id'],
+              title: item['name'],
+              description: item['description'] ?? 'No description available',
+              image: item['thumbnail']['path'] + '.' + item['thumbnail']['extension'],
+              isFavorite: false, // Adicionei o valor inicial de isFavorite como false
             );
           }).toList();
         });
@@ -70,10 +89,22 @@ class _MyPageViewState extends State<SearchPage> {
     setState(() {
       if (favoriteComics.contains(comic)) {
         favoriteComics.remove(comic);
-        comic.isFavorite = !comic.isFavorite;
+        comic.isFavorite = false; // Atualizei o valor de isFavorite
       } else {
         favoriteComics.add(comic);
-        comic.isFavorite = !comic.isFavorite;
+        comic.isFavorite = true; // Atualizei o valor de isFavorite
+      }
+    });
+  }
+ 
+  void toggleFavoritePersonagem(Personagem personagem) {
+    setState(() {
+      if (favoritePersonagens.contains(personagem)) {
+        favoritePersonagens.remove(personagem);
+        personagem.isFavorite = false; // Atualizei o valor de isFavorite
+      } else {
+        favoritePersonagens.add(personagem);
+        personagem.isFavorite = true; // Atualizei o valor de isFavorite
       }
     });
   }
@@ -90,6 +121,16 @@ class _MyPageViewState extends State<SearchPage> {
     } else {
       return comics
           .where((comic) => comic.title.toLowerCase().contains(searchQuery.toLowerCase()))
+          .toList();
+    }
+  }
+
+  List<Personagem> getFilteredPersonagens() {
+    if (searchQuery.isEmpty) {
+      return personagens;
+    } else {
+      return personagens
+          .where((personagem) => personagem.title.toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
     }
   }
@@ -143,7 +184,7 @@ class _MyPageViewState extends State<SearchPage> {
                     itemBuilder: (BuildContext context, int index) {
                       final comic = getFilteredComics()[index];
                       return Container(
-                        margin: EdgeInsets.all(100),
+                        margin: EdgeInsets.all(10),
                         child: Column(
                           children: [
                             Stack(
@@ -177,49 +218,84 @@ class _MyPageViewState extends State<SearchPage> {
                     },
                   ),
                 ),
-                
+
                 Expanded(
-                  child: Scaffold(
-                    body: Container(
-                      // Seu conteúdo da página aqui
-                    ),
-                    bottomNavigationBar: BottomNavigationBar(
-                      onTap: (int index) {
-                        if (index == 0) {
-                          Navigator.pushNamed(context, '/home');
-                        } else if (index == 1) {
-                          Navigator.pushNamed(context, '/search');
-                        } else if (index == 2) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FavoritePage(favoriteComics: favoriteComics),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: getFilteredPersonagens().length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final personagem = getFilteredPersonagens()[index];
+                      return Container(
+                        margin: EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.network(
+                                    personagem.image,
+                                    width: 200,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    personagem.isFavorite ? Icons.favorite : Icons.favorite_border,
+                                    color: personagem.isFavorite ? Colors.red : Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    toggleFavoritePersonagem(personagem);
+                                  },
+                                ),
+                              ],
                             ),
-                          );
-                        }
-                      },
-                      items: [
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.home, color: Colors.black),
-                          label: 'Home',
+                            SizedBox(height: 8),
+                            Text(personagem.title),
+                          ],
                         ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.search, color: Colors.black),
-                          label: 'Search',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.list, color: Colors.black),
-                          label: 'List',
-                        ),
-                      ],
-                      selectedItemColor: Colors.black,
-                    ),
+                      );
+                    },
                   ),
-                )
+                ),
               ],
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (int index) {
+          if (index == 0) {
+            Navigator.pushNamed(context, '/home');
+          } else if (index == 1) {
+            Navigator.pushNamed(context, '/search');
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FavoritePage(favoriteComics: favoriteComics),
+              ),
+            );
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, color: Colors.black),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search, color: Colors.black),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list, color: Colors.black),
+            label: 'List',
+          ),
+        ],
+        selectedItemColor: Colors.black,
+        currentIndex: _currentPage, // Definir o índice atual do BottomNavigationBar
       ),
     );
   }

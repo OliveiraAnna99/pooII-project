@@ -32,7 +32,7 @@ class _FavoritePageState extends State<FavoritePage> {
     setState(() {
       if (_visibleComicsCount < widget.favoriteComics.length) {
         _visibleComics = widget.favoriteComics.sublist(0, _visibleComicsCount);
-        _visibleComicsCount += 100;
+        _visibleComicsCount += 4;
       } else {
         _visibleComics = widget.favoriteComics;
       }
