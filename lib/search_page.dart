@@ -23,6 +23,7 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     fetchComics();
+    fetchPersonagens();
   }
 
   @override
@@ -38,16 +39,11 @@ class _SearchPageState extends State<SearchPage> {
     final hash = '79bb9c041d3a9fb28617b827b80ec5a5';
 
     final url =
-        'http://gateway.marvel.com/v1/public/comics?ts=1&apikey=72332a467099deb37887145eca3d01a2&hash=79bb9c041d3a9fb28617b827b80ec5a5';
-
-    final urlPersonagens =
-        'http://gateway.marvel.com/v1/public/characters?ts=1&apikey=72332a467099deb37887145eca3d01a2&hash=79bb9c041d3a9fb28617b827b80ec5a5';
+        'http://gateway.marvel.com/v1/public/comics?ts=$ts&apikey=$publicKey&hash=$hash';
 
     try {
       final response = await http.get(Uri.parse(url));
-      final responsePersonagens = await http.get(Uri.parse(urlPersonagens));
       if (response.statusCode == 200) {
-
         final data = json.decode(response.body);
         final List<dynamic> comicList = data['data']['results'];
 
@@ -58,22 +54,7 @@ class _SearchPageState extends State<SearchPage> {
               title: item['title'],
               description: item['description'] ?? 'No description available',
               image: item['thumbnail']['path'] + '.' + item['thumbnail']['extension'],
-              isFavorite: false, // Adicionei o valor inicial de isFavorite como false
-            );
-          }).toList();
-        });
-      } else if (responsePersonagens.statusCode == 200) {
-        final data = json.decode(responsePersonagens.body);
-        final List<dynamic> personagemList = data['data']['results'];
-
-        setState(() {
-          personagens = personagemList.map((item) {
-            return Personagem(
-              id: item['id'],
-              title: item['name'],
-              description: item['description'] ?? 'No description available',
-              image: item['thumbnail']['path'] + '.' + item['thumbnail']['extension'],
-              isFavorite: false, // Adicionei o valor inicial de isFavorite como false
+              isFavorite: false,
             );
           }).toList();
         });
@@ -85,26 +66,60 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  Future<void> fetchPersonagens() async {
+    final ts = '1';
+    final publicKey = '72332a467099deb37887145eca3d01a2';
+    final privateKey = 'YOUR_PRIVATE_KEY';
+    final hash = '79bb9c041d3a9fb28617b827b80ec5a5';
+
+    final urlPersonagens =
+        'http://gateway.marvel.com/v1/public/characters?ts=$ts&apikey=$publicKey&hash=$hash';
+
+    try {
+      final responsePersonagens = await http.get(Uri.parse(urlPersonagens));
+      if (responsePersonagens.statusCode == 200) {
+        final data = json.decode(responsePersonagens.body);
+        final List<dynamic> personagemList = data['data']['results'];
+
+        setState(() {
+          personagens = personagemList.map((item) {
+            return Personagem(
+              id: item['id'],
+              title: item['name'],
+              description: item['description'] ?? 'No description available',
+              image: item['thumbnail']['path'] + '.' + item['thumbnail']['extension'],
+              isFavorite: false,
+            );
+          }).toList();
+        });
+      } else {
+        print('Error making request: ${responsePersonagens.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
   void toggleFavorite(Comic comic) {
     setState(() {
       if (favoriteComics.contains(comic)) {
         favoriteComics.remove(comic);
-        comic.isFavorite = false; // Atualizei o valor de isFavorite
+        comic.isFavorite = false;
       } else {
         favoriteComics.add(comic);
-        comic.isFavorite = true; // Atualizei o valor de isFavorite
+        comic.isFavorite = true;
       }
     });
   }
- 
+
   void toggleFavoritePersonagem(Personagem personagem) {
     setState(() {
       if (favoritePersonagens.contains(personagem)) {
         favoritePersonagens.remove(personagem);
-        personagem.isFavorite = false; // Atualizei o valor de isFavorite
+        personagem.isFavorite = false;
       } else {
         favoritePersonagens.add(personagem);
-        personagem.isFavorite = true; // Atualizei o valor de isFavorite
+        personagem.isFavorite = true;
       }
     });
   }
@@ -218,7 +233,6 @@ class _SearchPageState extends State<SearchPage> {
                     },
                   ),
                 ),
-
                 Expanded(
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -295,7 +309,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ],
         selectedItemColor: Colors.black,
-        currentIndex: _currentPage, // Definir o índice atual do BottomNavigationBar
+        currentIndex: _currentPage,
       ),
     );
   }
