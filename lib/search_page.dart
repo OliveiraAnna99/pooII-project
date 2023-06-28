@@ -301,7 +301,7 @@ class _SearchPageState extends State<SearchPage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        DetailPersonagemPage(comicId: personagem.id),
+                                        DetailPersonagemPage(personagemId: personagem.id, personagemNome: personagem.title),
                                   ),
                                 );
                               },

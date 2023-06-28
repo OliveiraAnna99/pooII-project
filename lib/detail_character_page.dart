@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'comic.dart';
 class DetailPersonagemPage extends StatelessWidget {
-  final int comicId;
+  final int personagemId;
+  final String personagemNome;
 
-  DetailPersonagemPage({required this.comicId});
+  DetailPersonagemPage({required this.personagemId, required this.personagemNome});
 
   @override
   Widget build(BuildContext context) {
-    final comicDetails = getComicDetailsById(comicId);
+    final comicDetails = getComicDetailsById(personagemId, personagemNome);
 
     return Scaffold(
       appBar: AppBar(
@@ -52,11 +53,11 @@ class DetailPersonagemPage extends StatelessWidget {
   }
 
   
-  Comic getComicDetailsById(int id) {
+  Comic getComicDetailsById(int id, String nome) {
    
     return Comic(
       id: id,
-      title: 'Nome do Personagem',
+      title: nome,
       image: 'Imagem do Personagem',
       description: 'Descrição do Personagem',
     );
