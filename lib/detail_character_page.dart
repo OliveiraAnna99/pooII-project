@@ -1,66 +1,67 @@
 import 'package:flutter/material.dart';
 import 'comic.dart';
 class DetailPersonagemPage extends StatelessWidget {
-  final int personagemId;
-  final String personagemNome;
 
-  DetailPersonagemPage({required this.personagemId, required this.personagemNome});
+
+  DetailPersonagemPage({super.key, required this.personagem});
+
+  final dynamic personagem;
 
   @override
   Widget build(BuildContext context) {
-    final comicDetails = getComicDetailsById(personagemId, personagemNome);
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Detalhes da Personagem'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              comicDetails.title,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+        body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    personagem.title,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: Flexible(child:
+                Image.network(
+                  personagem.image,
+                  width: 200,
+                  fit: BoxFit.contain,
+                )),),
+                if (personagem.description == "") 
+                const Text("Não possui descrição", style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),)
+                else
+                Text(
+                  'Descrição:\n ${personagem.description}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 16),
-            Image.network(
-              comicDetails.image,
-              width: 200,
-              height: 200,
-              fit: BoxFit.cover,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Descrição:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              comicDetails.description,
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   
-  Comic getComicDetailsById(int id, String nome) {
-   
-    return Comic(
-      id: id,
-      title: nome,
-      image: 'Imagem do Personagem',
-      description: 'Descrição do Personagem',
-    );
-  }
+ 
 }
 
