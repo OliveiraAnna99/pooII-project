@@ -17,17 +17,19 @@ class ComicCard extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        comic['title'],
-                        style: const TextStyle(fontSize: 18),
-                        overflow: TextOverflow.fade,
-                      ),
-                      Text("#${comic['id']}")
-                    ],
+                  SizedBox(
+                    width: 170,
+                    child: Text(
+                      comic['title'],
+                      style: const TextStyle(fontSize: 18), overflow: TextOverflow.ellipsis,
+                    ),
                   ),
+                  Image(image: NetworkImage(comic['thumbnail']['path'] +
+                  '.' +
+                  comic['thumbnail']['extension'],),
+                  height: 200,
+                  width: 250,
+                  )
                   ]
                   ),
         )));
