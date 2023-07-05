@@ -24,6 +24,8 @@ class MyBottomNavBar extends StatelessWidget {
             );
           } else if (index == 3){
             Navigator.pushNamed(context, '/comic');
+          } else if (index == 4){
+            Navigator.pushNamed(context, '/personagem');
           }
         },
         items: const [
@@ -42,6 +44,10 @@ class MyBottomNavBar extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.tablet_android, color: Colors.black),
             label: 'List',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_3_sharp, color: Colors.black),
+            label: 'Personagem',
           ),
         ],
         selectedItemColor: Colors.black,

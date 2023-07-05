@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'initial_page.dart';
 import 'search_page.dart';
 import 'home_page.dart';
+import 'personagem_page.dart';
 import 'favorites_page.dart';
 import 'comic.dart'; // Importe a classe Comic
 import 'package:binder/binder.dart';
@@ -21,10 +22,11 @@ class MyApp extends StatelessWidget {
         home: InitialPage(),
         debugShowCheckedModeBanner: false,
         routes: {
-          '/home': (context) => HomePage(),
+          '/home': (context) => const HomePage(),
           '/search': (context) => SearchPage(),
           '/favorites': (context) => FavoritePage(favoriteComics: favoriteComics),
           '/comic' :(context) => const ComicPage(),
+          '/personagem' :(context) => const PesonagemPage(),
         },
       ),
     );
