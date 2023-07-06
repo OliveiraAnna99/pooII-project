@@ -10,6 +10,7 @@ class DetailComicPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.red,
         title: const Text('Detalhes da Comic'),
       ),
       body: SingleChildScrollView(

@@ -20,9 +20,9 @@ class PersonagemLogic with Logic{
   final Scope scope;
 
 Future<void> fetchPersonagens() async {
-    const ts = '1';
-    const publicKey = 'c326f480cc0138bf01c7c01dc9a5966b';
-    const hash = 'b301d583a60a6be3769ddb1bf9542ead';
+    const  ts = '1';
+    const  publicKey = '72332a467099deb37887145eca3d01a2';
+    const  hash = '79bb9c041d3a9fb28617b827b80ec5a5';
 
     const url =
         'http://gateway.marvel.com/v1/public/characters?ts=$ts&apikey=$publicKey&hash=$hash';

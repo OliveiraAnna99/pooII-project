@@ -35,10 +35,12 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> fetchComics() async {
+    //const ts = '1';
+    //const publicKey = 'c326f480cc0138bf01c7c01dc9a5966b';
+    //const hash = 'b301d583a60a6be3769ddb1bf9542ead';
     const ts = '1';
-    const publicKey = 'c326f480cc0138bf01c7c01dc9a5966b';
-    const hash = 'b301d583a60a6be3769ddb1bf9542ead';
-
+    const publicKey = '72332a467099deb37887145eca3d01a2';
+    const hash = '79bb9c041d3a9fb28617b827b80ec5a5';
     const url =
         'http://gateway.marvel.com/v1/public/comics?ts=$ts&apikey=$publicKey&hash=$hash';
 
@@ -70,9 +72,9 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> fetchPersonagens() async {
-    const  ts = '1';
-    const  publicKey = '72332a467099deb37887145eca3d01a2';
-    const  hash = '79bb9c041d3a9fb28617b827b80ec5a5';
+    const ts = '1';
+    const publicKey = '72332a467099deb37887145eca3d01a2';
+    const hash = '79bb9c041d3a9fb28617b827b80ec5a5';
 
     const urlPersonagens =
         'http://gateway.marvel.com/v1/public/characters?ts=$ts&apikey=$publicKey&hash=$hash';
@@ -160,165 +162,174 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text("Search for a content")),
-      body: Column(
-        children: [
-          FractionallySizedBox(
-            widthFactor: 0.8,
-            child: TextField(
-              onChanged: (value) {
-                searchComics(value);
-              },
-              decoration: InputDecoration(
-                labelText: 'Search for a content',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(60.0),
+        appBar: AppBar(
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            title: const Text("Search for a content")),
+        body: Column(
+          children: [
+            FractionallySizedBox(
+              widthFactor: 0.8,
+              child: TextField(
+                onChanged: (value) {
+                  searchComics(value);
+                },
+                decoration: InputDecoration(
+                  labelText: 'Search for a content',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(60.0),
+                  ),
                 ),
               ),
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Comics',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Comics',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 180,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: getFilteredComics().length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final comic = getFilteredComics()[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DetailComicPage(comic: comic),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        margin: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Flexible(
-                              child: Image.network(
-                                comic.image,
-                                fit: BoxFit.contain,
-                              ),
+                SizedBox(
+                  height: 180,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: getFilteredComics().length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final comic = getFilteredComics()[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailComicPage(comic: comic),
                             ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 150,
-                                  child: Text(comic.title, style: const TextStyle(fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, )),
-                                IconButton(
-                                  icon: Icon(
-                                    comic.isFavorite
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: comic.isFavorite
-                                        ? Colors.red
-                                        : Colors.grey,
-                                  ),
-                                  onPressed: () {
-                                    toggleFavorite(comic);
-                                  },
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          margin: const EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              Flexible(
+                                child: Image.network(
+                                  comic.image,
+                                  fit: BoxFit.contain,
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Personagens',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 180,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: getFilteredPersonagens().length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final personagem = getFilteredPersonagens()[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DetailPersonagemPage(personagem: personagem,),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        margin: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Flexible(
-                              child: Image.network(
-                                personagem.image,
-                                width: 200,
-                                height: 180,
-                                fit: BoxFit.contain,
                               ),
-                            ),
                               Row(
-                              children: [
-                                SizedBox(
-                                  width: 150,
-                                  child: Text(personagem.title, style: const TextStyle(fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, )),
-                                IconButton(
-                                  icon: Icon(
-                                    personagem.isFavorite
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: personagem.isFavorite
-                                        ? Colors.red
-                                        : Colors.grey,
+                                children: [
+                                  SizedBox(
+                                      width: 150,
+                                      child: Text(
+                                        comic.title,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                        overflow: TextOverflow.ellipsis,
+                                      )),
+                                  IconButton(
+                                    icon: Icon(
+                                      comic.isFavorite
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: comic.isFavorite
+                                          ? Colors.red
+                                          : Colors.grey,
+                                    ),
+                                    onPressed: () {
+                                      toggleFavorite(comic);
+                                    },
                                   ),
-                                  onPressed: () {
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-      bottomNavigationBar: MyBottomNavBar(favoriteComics: favoriteComics)
-    );
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Personagens',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 180,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: getFilteredPersonagens().length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final personagem = getFilteredPersonagens()[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailPersonagemPage(
+                                personagem: personagem,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          margin: const EdgeInsets.all(10),
+                          child: Column(
+                            children: [
+                              Flexible(
+                                child: Image.network(
+                                  personagem.image,
+                                  width: 200,
+                                  height: 180,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                      width: 150,
+                                      child: Text(
+                                        personagem.title,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                        overflow: TextOverflow.ellipsis,
+                                      )),
+                                  IconButton(
+                                    icon: Icon(
+                                      personagem.isFavorite
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: personagem.isFavorite
+                                          ? Colors.red
+                                          : Colors.grey,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        bottomNavigationBar: MyBottomNavBar(favoriteComics: favoriteComics));
   }
 }

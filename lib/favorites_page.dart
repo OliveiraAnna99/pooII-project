@@ -50,7 +50,7 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(0, 0, 0, 1.0),
+        backgroundColor: Colors.red,
         title: Text('Favorites'),
       ),
       body: ListView.builder(

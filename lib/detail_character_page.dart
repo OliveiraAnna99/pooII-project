@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'comic.dart';
 class DetailPersonagemPage extends StatelessWidget {
 
 
-  DetailPersonagemPage({super.key, required this.personagem});
+  const  DetailPersonagemPage({super.key, required this.personagem});
 
   final dynamic personagem;
 
@@ -12,17 +11,22 @@ class DetailPersonagemPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.red,
         title: Text('Detalhes da Personagem'),
       ),
         body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Center(
+          
           child: Padding(
+            
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                
                 Container(
+                 
                   margin: const EdgeInsets.only(bottom: 10),
                   child: Text(
                     personagem.title,

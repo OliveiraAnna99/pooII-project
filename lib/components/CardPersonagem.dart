@@ -18,18 +18,14 @@ class PersonagemCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      
-                      child: Image(
-                        image: NetworkImage(
-                          personagem['thumbnail']['path'] +
-                              '.' +
-                              personagem['thumbnail']['extension'],
-                        ),
-                        height: 60,
-                        width: 60,
+                    Image(
+                      image: NetworkImage(
+                        personagem['thumbnail']['path'] +
+                            '.' +
+                            personagem['thumbnail']['extension'],
                       ),
+                      height: 200,
+                      width: 230,
                     ),
                     SizedBox(
                       width: 170,
