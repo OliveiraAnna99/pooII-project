@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'comic.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'favorites_page.dart';
 import 'detail_character_page.dart';
 import 'detail_comic_page.dart';
 

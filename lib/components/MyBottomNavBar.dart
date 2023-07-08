@@ -23,26 +23,20 @@ class MyBottomNavBar extends StatelessWidget {
               ),
             );
           } else if (index == 3){
-            Navigator.pushNamed(context, '/comic');
-          } else if (index == 4){
             Navigator.pushNamed(context, '/personagem');
           }
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.black),
-            label: 'Home',
+            icon: Icon(Icons.book, color: Colors.black),
+            label: 'Comics',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search, color: Colors.black),
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list, color: Colors.black),
-            label: 'List',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.tablet_android, color: Colors.black),
+            icon: Icon(Icons.favorite, color: Colors.black),
             label: 'List',
           ),
           BottomNavigationBarItem(

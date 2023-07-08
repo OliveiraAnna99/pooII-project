@@ -6,6 +6,8 @@ import 'package:dart/components/MyBottomNavBar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+int infiniteScroll = 0;
+
 class PersonagemService{
     var personagemRef = StateRef<List<dynamic>>(const []);
 }
@@ -21,9 +23,9 @@ class PersonagemLogic with Logic{
 
 Future<void> fetchPersonagens() async {
     const  ts = '1';
-    const  publicKey = '72332a467099deb37887145eca3d01a2';
-    const  hash = '79bb9c041d3a9fb28617b827b80ec5a5';
-
+    const  publicKey = 'c326f480cc0138bf01c7c01dc9a5966b';
+    const  hash = 'b301d583a60a6be3769ddb1bf9542ead';
+    final  pageSize = 20;
     const url =
         'http://gateway.marvel.com/v1/public/characters?ts=$ts&apikey=$publicKey&hash=$hash';
 
@@ -31,7 +33,8 @@ Future<void> fetchPersonagens() async {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        update(personagemService.personagemRef, (dynamic list) => list=[...data['data']['results']]);
+        update(personagemService.personagemRef, (dynamic list) => list=[...list, ...data['data']['results']]);
+        infiniteScroll++;
       } 
     } catch (error) {
         update(personagemService.personagemRef, (dynamic list) => list=[null]);
@@ -51,10 +54,11 @@ class PesonagemPage extends StatelessWidget {
     final counter = context.watch(personagemService.personagemRef);
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.redAccent, title: const Text("Personagens"),),
-      body: ListView.builder(
+      body: ListView.separated(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(8),
         itemCount: counter.length + 1,
+        separatorBuilder: (context, index) => Divider(),
         itemBuilder: (context, index) {
           context.use(personagemLogicRef).fetchPersonagens();
 
